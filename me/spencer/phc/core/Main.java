@@ -1,64 +1,68 @@
 package me.spencer.phc.core;
 
 import com.phidgets.PhidgetException;
-import me.spencer.phc.core.controllers.InterfaceController;
-import me.spencer.phc.core.controllers.MotorController;
+import me.spencer.phc.core.controllers.Controllers;
 import me.spencer.phc.core.task.TaskManager;
 import me.spencer.phc.core.task.tasks.DistanceTask;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 
 public class Main {
 
-    private static InterfaceController interfaceController;
-    private static MotorController motorController;
-    private static TaskManager taskManager;
+    private final static TaskManager task = new TaskManager();
 
-    public static void main(String[] args) throws NumberFormatException, PhidgetException, InterruptedException {
-        if (args.length >= 2) {
-            interfaceController = new InterfaceController(Integer.parseInt(args[0]), args[1], Integer.parseInt(args[2]));
-            motorController = new MotorController(Integer.parseInt(args[0]), args[1], Integer.parseInt(args[2]));
-            if (args.length == 3) {
-                taskManager = new TaskManager();
-                taskManager.addTask(new DistanceTask());
-                taskManager.start();
-            }
+    public static void main(String[] args) {
+
+        JFrame jFrame = new JFrame(); //Have to draw a JFrame to use the keyboard event stuff. Didn't want to use external library.
+        JLabel jLabel = new JLabel();
+        jFrame.setVisible(true);
+        jFrame.setSize(360, 160);
+        jFrame.setTitle("Click on window");
+        if (args.length > 0 && Boolean.parseBoolean(args[0])) {
+            task.addTask(new DistanceTask());
+            task.start();
         } else {
-            System.out.println("Usage: java -jar <jar> <serial> <ip> <port> [task]\n Press <Enter> to exit.");
-            try{ System.in.read(); }catch(IOException e){e.printStackTrace();}
-            System.exit(0);
-        }
-
-        interfaceController.openDevice();
-        motorController.openDevice();
-        System.out.println("Devices initialized...");
-
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(ke -> {
             try {
-                switch (KeyEvent.KEY_PRESSED) {
-                    case KeyEvent.VK_W:
-                        motorController.moveForwardBackward(20.0D);
-                        break;
-                    case KeyEvent.VK_A:
-                        motorController.moveForwardBackward(-20.0D);
-                        break;
-                    case KeyEvent.VK_D:
-                        motorController.turnLeft(20.0D);
-                        break;
-                    case KeyEvent.VK_S:
-                        motorController.turnRight(20.0D);
-                        break;
-                    default:
-                        motorController.stop();
-                        break;
-                }
+                Controllers.getInterfaceController().setProperties(45633, "192.168.0.26", 5001);
+                Controllers.getMotorController().setProperties(100337, "192.168.0.26", 5001);
+                Controllers.getInterfaceController().openDevice();
+                Controllers.getInterfaceController().getInterfaceKitPhidget().waitForAttachment(10000);
+                Controllers.getMotorController().openDevice();
+                Controllers.getMotorController().getMotorControlPhidget().waitForAttachment(10000);
             } catch (PhidgetException e) {
                 e.printStackTrace();
             }
-            return false;
+
+        }
+
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(e -> {
+            switch(e.getKeyCode()) {
+                case KeyEvent.VK_W:
+                    Controllers.getMotorController().forwardBackward(50.0D);
+                    System.out.println("W");
+                    break;
+                case KeyEvent.VK_A:
+                    Controllers.getMotorController().turnLeft(50.0D);
+                    System.out.println("A");
+                    break;
+                case KeyEvent.VK_S:
+                    Controllers.getMotorController().forwardBackward(-50.0D);
+                    System.out.println("S");
+                    break;
+                case KeyEvent.VK_D:
+                    Controllers.getMotorController().turnRight(50.0D);
+                    System.out.println("D");
+                    break;
+                case KeyEvent.VK_Q:
+                    Controllers.getMotorController().stop();
+                    System.out.println("Stop");
+                    break;
+            }
+          return false;
         });
     }
+
 
 }
