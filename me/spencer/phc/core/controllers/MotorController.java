@@ -40,6 +40,7 @@ public class MotorController {
 
     public void forwardBackward(double speed) {
         try {
+        	stop();
             motorControlPhidget.setVelocity(0, speed);
             motorControlPhidget.setVelocity(1, speed);
         } catch(Exception e) {
@@ -49,6 +50,7 @@ public class MotorController {
 
     public void turnLeft(double speed) {
         try {
+        	stop();
             motorControlPhidget.setVelocity(0, speed);
             motorControlPhidget.setVelocity(1, -speed);
         } catch (Exception e) {
@@ -58,6 +60,7 @@ public class MotorController {
 
     public void turnRight(double speed) {
         try {
+        	stop();
             motorControlPhidget.setVelocity(0, -speed);
             motorControlPhidget.setVelocity(1, speed);
         } catch (Exception e) {
