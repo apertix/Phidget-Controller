@@ -17,7 +17,6 @@ public class Main {
 	private static boolean wKey, aKey, sKey, dKey, qKey = false;
 
 	public static void main(String[] args) {
-
 		JFrame jFrame = new JFrame(); //Have to draw a JFrame to use the keyboard event stuff. Didn't want to use external library.
 		JLabel jLabel = new JLabel();
 		jFrame.setVisible(true);
@@ -27,9 +26,9 @@ public class Main {
 			Controllers.getInterfaceController().setProperties(45633, "192.168.0.62", 5001);
 			Controllers.getMotorController().setProperties(100337, "192.168.0.62", 5001);
 			Controllers.getInterfaceController().openDevice();
-			Controllers.getInterfaceController().getInterfaceKitPhidget().waitForAttachment(15000);
+			Controllers.getInterfaceController().getInterfaceKitPhidget().waitForAttachment();
 			Controllers.getMotorController().openDevice();
-			Controllers.getMotorController().getMotorControlPhidget().waitForAttachment(15000);
+			Controllers.getMotorController().getMotorControlPhidget().waitForAttachment(10);
 		} catch (PhidgetException e) {
 			e.printStackTrace();
 		}
@@ -63,33 +62,40 @@ public class Main {
 				switch(e.getKeyCode()) {
 				case KeyEvent.VK_W:
 					if (!wKey) {
-						Controllers.getMotorController().forwardBackward(50.0D);
+						Controllers.getMotorController().forwardBackward(100.0D);
 						System.out.println("W");
 						wKey = true;
+						
 					}
 					break;
 				case KeyEvent.VK_A:
 					if (!aKey) {
-						Controllers.getMotorController().turnLeft(75.0D);
+						Controllers.getMotorController().turnLeft(100.0D);
 						System.out.println("A");
 						aKey = true;
+						
 					}
 					break;
 				case KeyEvent.VK_S:
 					if (!sKey) {
-						Controllers.getMotorController().forwardBackward(-50.0D);
+						Controllers.getMotorController().forwardBackward(-100.0D);
 						System.out.println("S");
 						sKey = true;
+						
 					}
 					break;
 				case KeyEvent.VK_D:
 					if (!dKey) {
-						Controllers.getMotorController().turnRight(75.0D);
+						Controllers.getMotorController().turnRight(100.0D);
 						System.out.println("D");
 						dKey = true;
+						
 					}
 					break;
+					
 				}
+				
+
 			}
 
 		});

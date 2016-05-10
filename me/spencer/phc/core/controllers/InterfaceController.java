@@ -22,9 +22,9 @@ public class InterfaceController {
         }
     }
 
-    public int getDistance() {
+    public double getDistanceInCM() {
         try {
-            return interfaceKitPhidget.getSensorValue(0);
+            return 9462 /(interfaceKitPhidget.getSensorRawValue(0) - 16.92);
         } catch (PhidgetException e) {
             e.printStackTrace();
         }

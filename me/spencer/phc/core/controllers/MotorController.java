@@ -52,7 +52,8 @@ public class MotorController {
         try {
         	stop();
             motorControlPhidget.setVelocity(0, speed);
-            motorControlPhidget.setVelocity(1, -speed);
+        	motorControlPhidget.setVelocity(1, -speed);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,7 +63,7 @@ public class MotorController {
         try {
         	stop();
             motorControlPhidget.setVelocity(0, -speed);
-            motorControlPhidget.setVelocity(1, speed);
+        	motorControlPhidget.setVelocity(1, speed);
         } catch (Exception e) {
             e.printStackTrace();
         }
